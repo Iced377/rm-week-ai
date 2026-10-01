@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The RM's Week · AI for Relationship Managers</title>
+<meta name="description" content="An interactive visual story for private banking relationship managers: how to brief, check, and build with AI safely.">
+<meta name="theme-color" content="#F7F3EA">
+<meta property="og:title" content="The RM's Week · AI for Relationship Managers">
+<meta property="og:description" content="Follow Sara, a private banker in Riyadh, through one week with AI. Estimate, sort, hunt for errors, redact, build and stress-test.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<a class="skip" href="#act-1">Skip to the story</a>
+
+<header class="topbar" id="topbar">
+  <a class="brand" href="#top"><span class="brand-mark" aria-hidden="true"></span><span>The RM's Week</span></a>
+  <nav class="actnav" aria-label="Acts">
+    <span class="daytag">Day 1</span>
+    <a href="#act-1" data-act="1">1 · Fit</a>
+    <a href="#act-2" data-act="2">2 · Brief</a>
+    <a href="#act-3" data-act="3">3 · Trust</a>
+    <a href="#act-4" data-act="4">4 · Documents</a>
+    <a href="#act-5" data-act="5">5 · Voice</a>
+    <a href="#act-6" data-act="6">6 · Safe</a>
+    <span class="daytag">Day 2</span>
+    <a href="#act-7" data-act="7">7 · Choose</a>
+    <a href="#act-8" data-act="8">8 · Build</a>
+    <a href="#act-9" data-act="9">9 · Adopt</a>
+    <a href="#finale" data-act="10">★ Check</a>
+  </nav>
+  <div class="progress" title="Your progress"><div class="progress-bar" id="progressBar"></div><span class="progress-label" id="progressLabel">0%</span></div>
+</header>
+
+<main id="top">
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="hero-copy">
+    <p class="kicker">AI for Relationship Managers · an interactive visual story</p>
+    <h1>The RM's Week</h1>
+    <p class="lede">Follow Sara, a private banker in Riyadh, through one week with an AI assistant. She has a review on Thursday with <strong>Client A</strong>, a family business in its second generation, and a pile of reading and writing between her and that meeting.</p>
+    <p>You will estimate, sort, build prompts, hunt for invented figures, redact a client note, and stress-test a tool until it holds. Along the way you will find out a few things about the tool, and about yourself.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#act-1">Start Sara's week</a>
+      <button class="btn btn-ghost" id="resumeBtn" hidden>Pick up where I left off</button>
+    </div>
+    <ul class="hero-meta">
+      <li><b>9</b> acts</li><li><b>~30</b> interactions</li><li><b>45–60</b> minutes</li><li>No technical background needed</li>
+    </ul>
+  </div>
+  <figure class="hero-art"><img src="assets/art/hero.svg" alt="Illustration of Sara, a private banker, at her desk with a laptop, documents and Arabic coffee, the Riyadh skyline behind her." width="560" height="440"></figure>
+</section>
+
+<section class="cast">
+  <div class="cast-card">
+    <img src="assets/art/sara.svg" alt="" width="72" height="72">
+    <div><h3>Sara</h3><p>Private banking RM, Riyadh. Fourteen client families. Writes in Arabic and English. Wants her Thursday back.</p></div>
+  </div>
+  <div class="cast-card">
+    <img src="assets/art/clienta.svg" alt="" width="72" height="72">
+    <div><h3>Client A</h3><p>Second-generation family business. Principal (58) and his eldest son, who now joins every meeting. Portfolio about SAR 45m.</p></div>
+  </div>
+  <div class="cast-card">
+    <img src="assets/art/assistant.svg" alt="" width="72" height="72">
+    <div><h3>The assistant</h3><p>Fast, fluent, tireless. Knows only what it is given. Never says "I am guessing" unless told to.</p></div>
+  </div>
+  <p class="synthetic-note">Every client, figure and document here is <b>synthetic</b>. AI responses are <b>teaching simulations</b> written to show real behaviour patterns, not live model output.</p>
+</section>
+
+<!-- ================= DAY 1 ================= -->
+<div class="day-divider"><span>Day 1</span><h2>Driving the tool properly</h2></div>
+
+<!-- ACT 1 -->
+<section class="act" id="act-1" data-act="1">
+  <header class="act-head">
+    <div>
+      <p class="act-num">Act 1 · Fit</p>
+      <h2>Where does the week go?</h2>
+      <p class="act-lede">Before any tool, decide which hours are worth buying back. Not all of them are.</p>
+    </div>
+    <img class="act-art" src="assets/art/act1.svg" alt="" width="260" height="200">
+  </header>
+
+  <article class="card" data-widget="timeSplit" data-id="a1-split">
+    <p class="mech">Estimate · drag the sliders</p>
+    <h3>Guess how Sara's week splits</h3>
+    <p>Sara works about 45 hours a week. How much of it is reading and assembling, writing and rewriting, and actually with clients?</p>
+  </article>
+
+  <article class="card" data-widget="fitSort" data-id="a1-sort">
+    <p class="mech">Sort · drag or tap a card, then a bin</p>
+    <h3>Ten tasks from Sara's week. Where does each one belong?</h3>
+    <p>Put each task where it belongs. Each card flips over to tell you why.</p>
+  </article>
+
+  <article class="card" data-widget="breakEven" data-id="a1-breakeven">
+    <p class="mech">Calculate · move the sliders</p>
+    <h3>When is AI slower than doing it yourself?</h3>
+    <p>Every AI task has a fixed cost: explaining it, then checking what comes back. Find the point where that cost stops paying off.</p>
+  </article>
+
+  <aside class="insight">
+    <h4>The honest default: 80/20</h4>
+    <p>Expect the tool to do about eighty percent of the <em>assembly</em> and none of the <em>judgement</em>. Your value is the other twenty: knowing the family, knowing the bank, knowing what the document is really for. Treat it as a fast, tireless junior analyst. <b>It drafts. You decide.</b></p>
+  </aside>
+</section>
+
+<!-- ACT 2 -->
+<section class="act" id="act-2" data-act="2">
+  <header class="act-head">
+    <div>
+      <p class="act-num">Act 2 · Brief</p>
+      <h2>Brief it like a new analyst</h2>
+      <p class="act-lede">The difference between a useless answer and a usable one is almost always the brief, not magic words. The test: could a competent stranger produce what you want from your instruction alone?</p>
+    </div>
+    <img class="act-art" src="assets/art/act2.svg" alt="" width="260" height="200">
+  </header>
+
+  <article class="card" data-widget="promptBuilder" data-id="a2-builder">
+    <p class="mech">Build · switch the four parts on and off</p>
+    <h3>One task, sixteen possible briefs</h3>
+    <p>Sara's task: prepare for Thursday's review with Client A. Start with the lazy prompt and add the four parts in any order. Watch the guesses counter.</p>
+  </article>
+
+  <article class="card" data-widget="promptLint" data-id="a2-lint">
+    <p class="mech">Write · type your own brief</p>
+    <h3>Your turn: write the brief</h3>
+    <p>Write a brief for Sara's next task: <b>a follow-up email to Client A's son after Thursday's review, confirming the next step.</b> Feedback appears as you type.</p>
+  </article>
+
+  <article class="card" data-widget="correctPath" data-id="a2-path">
+    <p class="mech">Choose your path · your reaction decides what happens</p>
+    <h3>The first draft is wrong. Now what?</h3>
+    <p>The assistant's first draft is too long, has a paragraph of speculation, and calls the murabaha deposit a "loan". What do you do?</p>
+  </article>
+
+  <article class="card" data-widget="registerMatch" data-id="a2-match">
+    <p class="mech">Match · tap a reader, then what "professional" means to them</p>
+    <h3>"Make it professional" means nothing on its own</h3>
+    <p>The reader decides what professional looks like. Match each reader to their register.</p>
+  </article>
+
+  <aside class="insight">
+    <h4>Three lines worth keeping</h4>
+    <ul>
+      <li><b>"Before you answer, ask me up to five questions that would make your answer better."</b> The questions are usually the ones your manager would have asked.</li>
+      <li><b>"Use only the attached file. If something is not in it, say so."</b> This prevents most invented answers.</li>
+      <li><b>"What are the three weakest points in what you just wrote?"</b> It is a surprisingly honest reviewer of its own work.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- ACT 3 -->
+<section class="act" id="act-3" data-act="3">
+  <header class="act-head">
+    <div>
+      <p class="act-num">Act 3 · Trust</p>
+      <h2>Confident, and sometimes wrong</h2>
+      <p class="act-lede">A wrong answer looks exactly like a right one. This act explains why it happens, and measures how much fluent writing fools <em>you</em>.</p>
+    </div>
+    <img class="act-art" src="assets/art/act3.svg" alt="" width="260" height="200">
+  </header>
+
+  <article class="card" data-widget="patternFill" data-id="a3-pattern">
+    <p class="mech">Predict, then trace · find the line with no source</p>
+    <h3>Why it invents: the pattern wants completing</h3>
+    <p>The tool writes the most <em>plausible</em> next words, one piece at a time. Plausible is not the same as true. When the material runs out, plausible is all that is left.</p>
+  </article>
+
+  <article class="card" data-widget="confidence" data-id="a3-confidence">
+    <p class="mech">Rate your confidence · then see the file</p>
+    <h3>The fluency trap: how sure are you?</h3>
+    <p>Six statements the assistant wrote about Client A's file. All are written equally well. Rate each one <b>before</b> you see the source.</p>
+  </article>
+
+  <article class="card" data-widget="pushback" data-id="a3-pushback">
+    <p class="mech">Simulated chat · push back and watch</p>
+    <h3>"Are you sure?"</h3>
+    <p>Sara asks a simple question and gets the right answer. Then she pushes back.</p>
+  </article>
+
+  <article class="card" data-widget="errorHunt" data-id="a3-hunt">
+    <p class="mech">Timed hunt · 90 seconds · click the suspect lines</p>
+    <h3>The brief that nearly went out</h3>
+    <p>This pre-meeting brief contains <b>four</b> errors of the kind these tools make: a calculated figure, a wrong date, a softened risk, and a currency mix-up. Find them before the timer ends, then check against the source.</p>
+  </article>
+
+  <aside class="insight">
+    <h4>The three-question check (90 seconds, every time)</h4>
+    <ol>
+      <li><b>Where did every number come from?</b> Point at the page, or delete the number.</li>
+      <li><b>Is anything asserted that was not in the material I gave it?</b></li>
+      <li><b>Would I be comfortable if this went to the client exactly as written?</b></li>
+    </ol>
+    <p>Quoted figures are usually right. <b>Calculated</b> figures are the danger. The safe instruction: <em>"Quote figures exactly as they appear. Do not calculate anything. If a calculation is needed, say what should be calculated and leave it to me."</em></p>
+  </aside>
+</section>
+
+<!-- ACT 4 -->
+<section class="act" id="act-4" data-act="4">
+  <header class="act-head">
+    <div>
+      <p class="act-num">Act 4 · Documents</p>
+      <h2>Forty pages, eight lines that matter</h2>
+      <p class="act-lede">Uploading the material is the biggest quality jump available. Without material it guesses. With material it works, within limits you should know.</p>
+    </div>
+    <img class="act-art" src="assets/art/act4.svg" alt="" width="260" height="200">
+  </header>
+
+  <article class="card" data-widget="fourMoves" data-id="a4-moves">
+    <p class="mech">Choose the move · then see the result</p>
+    <h3>Four moves, four very different risk levels</h3>
+    <p>For each request Sara makes about Client A's file, pick the move. Then see what the move produces and how risky it is.</p>
+  </article>
+
+  <article class="card" data-widget="lostMiddle" data-id="a4-middle">
+    <p class="mech">Explore · slide the fact through the file</p>
+    <h3>Lost in the middle</h3>
+    <p>In a 40-page file, one line matters: <em>the real estate fund's lock-up ends in December 2026.</em> Move that line to different pages and see how reliably a long summary keeps it.</p>
+  </article>
+
+  <article class="card" data-widget="orderSteps" data-id="a4-order">
+    <p class="mech">Order · use the arrows to sequence the steps</p>
+    <h3>From a cold file to a brief you can walk in with</h3>
+    <p>Put Sara's document workflow in the right order.</p>
+  </article>
+
+  <aside class="insight">
+    <h4>Make every figure traceable</h4>
+    <p><em>"For every number you state, give the page it came from. If you cannot locate it, write 'not found in source'."</em> The output stops being a story about the document and becomes a map into it, and asking for a citation makes it less willing to invent.</p>
+  </aside>
+</section>
+
+<!-- ACT 5 -->
+<section class="act" id="act-5" data-act="5">
+  <header class="act-head">
+    <div>
+      <p class="act-num">Act 5 · Voice</p>
+      <h2>Sounding like you, not like a tool</h2>
+      <p class="act-lede">Correct is the floor. Clients notice voice long before they notice accuracy, and private clients notice fastest.</p>
+    </div>
+    <img class="act-art" src="assets/art/act5.svg" alt="" width="260" height="200">
+  </header>
+
+  <article class="card" data-widget="tells" data-id="a5-tells">
+    <p class="mech">Spot · tap every phrase that gives it away</p>
+    <h3>Everyone can spot the default voice</h3>
+    <p>An untouched AI draft to Client A's principal. Tap each phrase that tells him nobody really wrote it. There are eight.</p>
+  </article>
+
+  <article class="card" data-widget="threeVoices" data-id="a5-voices">
+    <p class="mech">Choose · pick the one you would send</p>
+    <h3>Same situation, three emails</h3>
+    <p>Last quarter, Client A's equity holdings fell. The son asked for a call. Which follow-up would you send?</p>
+  </article>
+
+  <article class="card" data-widget="arabic" data-id="a5-arabic">
+    <p class="mech">Flip the cards · then judge the Arabic</p>
+    <h3>Arabic and English, the Islamic banking way</h3>
+    <p>Generic AI output slips into conventional banking terms. Flip each card to see the term a Sharia-compliant bank uses.</p>
+  </article>
+
+  <aside class="insight">
+    <h4>Teach it your voice once</h4>
+    <ol>
+      <li>Collect five pieces of your own writing you were happy with (redacted).</li>
+      <li>Ask it to describe your style in ten specific observations.</li>
+      <li>Correct the description. That corrected text is your style guide.</li>
+      <li>Put it at the top of anything client-facing. Refresh every few months.</li>
+    </ol>
+    <p>For Arabic: <em>"Write it as it would be written originally in Arabic"</em> beats <em>"translate this"</em>. And a native speaker still reads it before it goes out. That is you.</p>
+  </aside>
+</section>
+
+<!-- ACT 6 -->
+<section class="act" id="act-6" data-act="6">
+  <header class="act-head">
+    <div>
+      <p class="act-num">Act 6 · Safe</p>
+      <h2>The line you do not cross</h2>
+      <p class="act-lede">Everything else is worthless if one client file leaves the bank. Removing the name is not the same as anonymising.</p>
+    </div>
+    <img class="act-art" src="assets/art/act6.svg" alt="" width="260" height="200">
+  </header>
+
+  <div class="rules">
+    <div class="rule"><span>01</span><p><b>Synthetic or redacted only.</b> If you would not email it to an external address, do not paste it.</p></div>
+    <div class="rule"><span>02</span><p><b>No client identifiers.</b> Names, national IDs, Iqama, IBANs, balances, contact details, anything that maps back to a person.</p></div>
+    <div class="rule"><span>03</span><p><b>A human reads it before a client does.</b> Every time. You sign it, you own it.</p></div>
+  </div>
+
+  <article class="card" data-widget="funnel" data-id="a6-funnel">
+    <p class="mech">Filter · add details one at a time</p>
+    <h3>How many families could this be?</h3>
+    <p>Sara removes the client's name and pastes a "harmless" description. Add each detail she left in and watch how many families it could still describe.</p>
+  </article>
+
+  <article class="card" data-widget="redact" data-id="a6-redact">
+    <p class="mech">Redact · tap everything that identifies the client</p>
+    <h3>The 90-second redaction</h3>
+    <p>Sara's raw note after a call. Tap every piece that should not go into an external AI tool. Some are obvious. Some hide in the details.</p>
+  </article>
+
+  <article class="card" data-widget="swipe" data-id="a6-swipe">
+    <p class="mech">Swipe or tap · Yes / No / Probably</p>
+    <h3>Would you paste this?</h3>
+    <p>Ten situations from a normal week. Decide fast, as you would at your desk.</p>
+  </article>
+
+  <article class="card" data-widget="adviceSort" data-id="a6-advice">
+    <p class="mech">Classify · information, advice, or a commitment?</p>
+    <h3>When a draft crosses the line</h3>
+    <p>AI drafts drift from describing to recommending without announcing it. In the Kingdom, investment advice is regulated by the Capital Market Authority and runs through licensed processes. Classify each sentence.</p>
+  </article>
+
+  <aside class="insight">
+    <h4>If in doubt, one question</h4>
+    <p class="bigquote">"If this exact text appeared in a regulator's file with my name on it, would I be comfortable?"</p>
+    <p>Yes: proceed. No: redact it, or do that part by hand. "Probably": treat it as a no and ask. These rules hold until the bank says otherwise, in writing, on an approved platform. Saudi Arabia's Personal Data Protection Law (PDPL) also restricts sending personal data outside the Kingdom, and most public AI tools process data abroad.</p>
+  </aside>
+</section>
+
+<!-- ================= DAY 2 ================= -->
+<div class="day-divider"><span>Day 2</span><h2>Building your own use cases</h2></div>
+
+<!-- ACT 7 -->
+<section class="act" id="act-7" data-act="7">
+  <header class="act-head">
+    <div>
+      <p class="act-num">Act 7 · Choose</p>
+      <h2>Most tools die at the first choice</h2>
+      <p class="act-lede">Yesterday Sara used the tool one conversation at a time. Today she builds something that runs the same way every week, and that a colleague can use while she is on leave. Picking the task is where most attempts fail.</p>
+    </div>
+    <img class="act-art" src="assets/art/act7.svg" alt="" width="260" height="200">
+  </header>
+
+  <article class="card" data-widget="scorer" data-id="a7-scorer">
+    <p class="mech">Score · five dimensions, live verdict</p>
+    <h3>Score it before you build it</h3>
+    <p>Pick one of Sara's candidate tasks (or describe your own) and score it honestly. 12 and above: build it. 8 to 11: build it narrow. Below 8: pick something else.</p>
+  </article>
+
+  <article class="card" data-widget="narrow" data-id="a7-narrow">
+    <p class="mech">Narrow · choose X, Y and Z</p>
+    <h3>Write the one-line promise</h3>
+    <p><b>Give it X, and it gives you Y, in under Z minutes, every time.</b> If you cannot fill in X, Y and Z, you are not ready to build.</p>
+  </article>
+</section>
+
+<!-- ACT 8 -->
+<section class="act" id="act-8" data-act="8">
+  <header class="act-head">
+    <div>
+      <p class="act-num">Act 8 · Build</p>
+      <h2>A conversation is not a tool</h2>
+      <p class="act-lede">A tool has three parts: instructions (the brain), reference material (the memory), and an output template (the shape). Everything else is writing those well and breaking them on purpose.</p>
+    </div>
+    <img class="act-art" src="assets/art/act8.svg" alt="" width="260" height="200">
+  </header>
+
+  <article class="card" data-widget="assemble" data-id="a8-assemble">
+    <p class="mech">Assemble · drag or tap each piece into place</p>
+    <h3>Build Sara's pre-meeting brief tool</h3>
+    <p>Nine pieces. Four places. One of the places is a trap.</p>
+  </article>
+
+  <article class="card" data-widget="examples" data-id="a8-examples">
+    <p class="mech">Compare · zero, one or two examples attached</p>
+    <h3>Where the quality actually comes from</h3>
+    <p>Same instructions, same input. The only change is how many good past briefs are attached as reference.</p>
+  </article>
+
+  <article class="card" data-widget="stress" data-id="a8-stress">
+    <p class="mech">Stress test · switch on guardrails until all three cases pass</p>
+    <h3>Break it here, not in front of a client</h3>
+    <p>Run Sara's tool on three test cases: a straightforward one, a different shape, and a deliberately hostile one. Each failure needs a <em>rule</em>, not a nicer adjective. Aim for all three passing with no wasted guardrails.</p>
+  </article>
+
+  <aside class="insight">
+    <h4>Teach it to say "I do not know"</h4>
+    <p class="bigquote">"If the material does not answer a section, write 'not available in source' and move on. Do not estimate, do not infer from context, do not leave the section out."</p>
+    <p>A brief with three honest gaps is more useful than a complete-looking one with three invented figures. Then the handover test: give the tool to a colleague with no explanation. Anything they have to ask you is a gap in your instructions.</p>
+  </aside>
+</section>
+
+<!-- ACT 9 -->
+<section class="act" id="act-9" data-act="9">
+  <header class="act-head">
+    <div>
+      <p class="act-num">Act 9 · Adopt</p>
+      <h2>Sunday morning, back at the desk</h2>
+      <p class="act-lede">Most tools built in a training room are never opened again. The ones that survive are measured, owned, and reviewed.</p>
+    </div>
+    <img class="act-art" src="assets/art/act9.svg" alt="" width="260" height="200">
+  </header>
+
+  <article class="card" data-widget="caseCalc" data-id="a9-case">
+    <p class="mech">Calculate · then copy your one-page case</p>
+    <h3>Savings nobody measures never get funded</h3>
+    <p>Put real numbers on Sara's tool and turn them into the one-page case her manager can act on.</p>
+  </article>
+
+  <article class="card" data-widget="keepKill" data-id="a9-keep">
+    <p class="mech">Decide · keep, fix or kill</p>
+    <h3>Three tools, three weeks later</h3>
+    <p>Killing a tool that does not earn its place is a good outcome, not a failure. Make the call.</p>
+  </article>
+
+  <div class="path90">
+    <div><span>Weeks 1–2 · You</span><h4>Make it a habit</h4><p>Three real runs, fixed after each. Do the task by hand alongside the first. Log the time.</p></div>
+    <div><span>Weeks 3–6 · Your team</span><h4>Make it shared</h4><p>Show two colleagues. Run the handover test for real. One owner, one version.</p></div>
+    <div><span>Weeks 7–12 · The bank</span><h4>Make the case</h4><p>One page: time, controls, the ask. Name what approved real data would unlock.</p></div>
+  </div>
+</section>
+
+<!-- ================= FINALE ================= -->
+<section class="act finale" id="finale" data-act="10">
+  <header class="act-head">
+    <div>
+      <p class="act-num">The big picture</p>
+      <h2>Two days, one page</h2>
+    </div>
+    <img class="act-art" src="assets/art/finale.svg" alt="" width="260" height="200">
+  </header>
+
+  <div class="bigpicture">
+    <div class="bp-col"><h4>Day 1 · Driving it</h4>
+      <ol><li>Brief it: role, material, format, constraints</li><li>Give it documents, ask for page references</li><li>Verify every figure; delete what you cannot support</li><li>Teach it your voice from real samples</li><li>Synthetic or redacted, always</li></ol></div>
+    <div class="bp-col"><h4>Day 2 · Building on it</h4>
+      <ol><li>Choose narrow, frequent, safe, checkable</li><li>Three parts: instructions, references, template</li><li>Build in rounds, test on real shapes</li><li>Break it deliberately, write the guardrail</li><li>Name an owner, a reviewer and a version</li></ol></div>
+  </div>
+  <p class="remember">If you remember one thing on Sunday: <b>it drafts, you decide, and every number that leaves your desk is one you checked.</b></p>
+
+  <article class="card" data-widget="quiz" data-id="quiz">
+    <p class="mech">Knowledge check · 15 questions, mixed formats</p>
+    <h3>How much of the week stuck?</h3>
+    <p>Answer all fifteen, then see your score, what you missed, and where to look again.</p>
+  </article>
+
+  <article class="card results" data-widget="results">
+    <p class="mech">Your results card</p>
+    <h3>What the week revealed about you</h3>
+  </article>
+
+  <div class="restart"><button class="btn btn-ghost" id="restartBtn">Restart the story</button></div>
+</section>
+
+</main>
+
+<footer class="site-foot">
+  <p><b>The RM's Week</b> · an interactive companion to <em>AI for Relationship Managers</em>, a two-day programme delivered with BIBF.</p>
+  <p>All clients, figures and documents are synthetic. AI responses are teaching simulations, not live model output. Your progress is saved only in this browser.</p>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
