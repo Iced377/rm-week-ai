@@ -1,9 +1,9 @@
-import { state, registerTotal, observeCards, resetAll, updateProgress } from './core.js?v=ar-qa-5';
-import * as A from './acts1to3.js?v=ar-qa-5';
-import * as B from './acts4to6.js?v=ar-qa-5';
-import * as C from './acts7to9.js?v=ar-qa-5';
-import * as F from './finale.js?v=ar-qa-5';
-import { initI18n, getLanguage } from './i18n.js?v=ar-qa-5';
+import { state, registerTotal, observeCards, resetAll, updateProgress } from './core.js?v=ar-qa-6';
+import * as A from './acts1to3.js?v=ar-qa-6';
+import * as B from './acts4to6.js?v=ar-qa-6';
+import * as C from './acts7to9.js?v=ar-qa-6';
+import * as F from './finale.js?v=ar-qa-6';
+import { initI18n, getLanguage } from './i18n.js?v=ar-qa-6';
 
 const W = { ...A, ...B, ...C, ...F };
 

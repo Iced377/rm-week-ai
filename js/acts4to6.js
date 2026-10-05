@@ -1,6 +1,6 @@
-import { h, $, $$, complete, setFb, fb, wrap, sorter, shuffle } from './core.js?v=ar-qa-5';
-import { statementHTML } from './data.js?v=ar-qa-5';
-import { getLanguage } from './i18n.js?v=ar-qa-5';
+import { h, $, $$, complete, setFb, fb, wrap, sorter, shuffle } from './core.js?v=ar-qa-6';
+import { statementHTML } from './data.js?v=ar-qa-6';
+import { getLanguage } from './i18n.js?v=ar-qa-6';
 
 /* ---------------- ACT 4 ---------------- */
 const MOVES = ['Extract', 'Summarise', 'Compare', 'Find the gap'];

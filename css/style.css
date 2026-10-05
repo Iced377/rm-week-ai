@@ -400,3 +400,4 @@ html[dir="rtl"] .bp-col ol,html[dir="rtl"] .case ul{padding-left:0;padding-right
 .chip[disabled]{opacity:.45;cursor:not-allowed}
 html[dir="rtl"] .topbar{flex-direction:row-reverse}
 html[dir="rtl"] .actnav{direction:rtl}
+html[dir="rtl"] svg text{direction:ltr;unicode-bidi:isolate}
