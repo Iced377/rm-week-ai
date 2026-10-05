@@ -1,5 +1,6 @@
-import { h, $, $$, complete, setFb, fb, wrap, sorter, shuffle } from './core.js';
-import { statementHTML } from './data.js';
+import { h, $, $$, complete, setFb, fb, wrap, sorter, shuffle } from './core.js?v=ar-qa-5';
+import { statementHTML } from './data.js?v=ar-qa-5';
+import { getLanguage } from './i18n.js?v=ar-qa-5';
 
 /* ---------------- ACT 4 ---------------- */
 const MOVES = ['Extract', 'Summarise', 'Compare', 'Find the gap'];
@@ -224,21 +225,25 @@ export function funnel(card) {
 
 const NOTE = [
   ['Call with ', 0], ['Khalid Al-Rashidi', 1, 'Name'], [' (', 0], ['eldest son of the principal', 0], [') on ', 0], ['Tuesday 14 May', 1, 'A date that pins down the event'], [', ', 0], ['mobile +966 55 418 2093', 1, 'Contact detail'], ['. He confirmed the family\'s ', 0],
-  ['logistics business in Jeddah', 1, 'Sector + city: an identifying combination'], [' will receive ', 0], ['SAR 47,312,900', 1, 'Exact amount: band it instead'], [' from the stake sale, to be paid into ', 0], ['IBAN SA44 2000 0001 2345 6789 1234', 1, 'Account identifier'],
+  ['logistics business in Jeddah', 1, 'Sector + city: an identifying combination'], [' will receive ', 0], ['SAR 47,312,900', 1, 'Exact amount: band it instead'], [' from the stake sale, to be paid into ', 0], ['IBAN 0000 0000 0000 0000', 1, 'Account identifier'],
   ['. His ', 0], ['national ID 1078456321', 1, 'National ID'], [' expires in December, so a ', 0], ['KYC refresh', 0], [' is needed. Wants to discuss ', 0], ['sukuk', 0], [' and a ', 0], ['moderate-risk allocation', 0], [' at the ', 0], ['next quarterly review', 0],
-  ['. Sent from: ', 0], ['k.alrashidi@example.com', 1, 'Email address in the signature'],
+  ['. Sent from: ', 0], ['training email address', 1, 'Email address in the signature'],
+];
+const NOTE_AR = [
+  ['مكالمة مع ', 0], ['خالد الراشدي', 1, 'الاسم'], [' (', 0], ['الابن الأكبر لرب الأسرة', 0], [') بتاريخ ', 0], ['الثلاثاء 14 مايو', 1, 'تاريخ يحدد الواقعة'], ['، ', 0], ['+966 55 418 2093', 1, 'معلومة اتصال'], ['. وأكد أن الأسرة ستتلقى ', 0], ['47,312,900 ريال سعودي', 1, 'المبلغ الدقيق: استخدم نطاقاً بدلاً منه'], [' من بيع حصة في نشاطها بقطاع ', 0], ['الخدمات اللوجستية بمدينة جدة', 1, 'القطاع والمدينة: تركيبة تكشف الهوية'], ['، وستُحوّل إلى ', 0], ['رقم الآيبان الافتراضي (٠٠٠٠ ٠٠٠٠ ٠٠٠٠ ٠٠٠٠)', 1, 'معرّف الحساب'], ['. وتنتهي صلاحية ', 0], ['رقم الهوية الوطنية (1078456321)', 1, 'رقم الهوية الوطنية'], [' في ديسمبر، لذا يلزم ', 0], ['تحديث إجراءات اعرف عميلك', 0], ['. ويرغب في مناقشة ', 0], ['الصكوك', 0], [' وملف مخاطر ', 0], ['توزيع استثماري متوسط المخاطر', 0], [' في ', 0], ['المراجعة الفصلية المقبلة', 0], ['. أُرسلت من: ', 0], ['عنوان بريد إلكتروني افتراضي (محذوف)', 1, 'عنوان البريد الإلكتروني في التوقيع'],
 ];
 export function redact(card) {
   const w = wrap(card);
+  const note = getLanguage() === 'ar' ? NOTE_AR : NOTE;
   const doc = h('div', { class: 'doc', style: { fontSize: '15.5px', lineHeight: 2 } }, h('div', { class: 'dochead' }, h('span', {}, 'Sara · call note · raw'), h('span', {}, 'Synthetic')));
   let done = false;
-  const toks = NOTE.map(([t, id]) => { if (t.length < 4 && !id) { doc.append(t); return null; } const s = h('span', { class: 'tok' }, t); s.onclick = () => { if (!done) s.classList.toggle('redacted'); }; doc.append(s); return s; });
+  const toks = note.map(([t, id]) => { if (t.length < 4 && !id) { doc.append(t); return null; } const s = h('span', { class: 'tok' }, t); s.onclick = () => { if (!done) s.classList.toggle('redacted'); }; doc.append(s); return s; });
   const btn = h('button', { class: 'btn btn-primary mt' }, 'Check my redaction');
   const res = h('div');
   btn.onclick = () => {
     done = true; btn.disabled = true; let hit = 0, miss = [], over = 0;
-    NOTE.forEach(([t, id, why], i) => { const s = toks[i]; if (!s) return; const r = s.classList.contains('redacted'); if (id && r) { hit++; s.classList.add('hit'); } else if (id) { miss.push(why); s.classList.add('miss'); } else if (r) { over++; s.classList.remove('redacted'); s.classList.add('wrong'); } });
-    const total = NOTE.filter(n => n[1]).length;
+    note.forEach(([t, id, why], i) => { const s = toks[i]; if (!s) return; const r = s.classList.contains('redacted'); if (id && r) { hit++; s.classList.add('hit'); } else if (id) { miss.push(why); s.classList.add('miss'); } else if (r) { over++; s.classList.remove('redacted'); s.classList.add('wrong'); } });
+    const total = note.filter(n => n[1]).length;
     res.replaceChildren(
       h('div', { class: 'stats' }, h('div', { class: 'stat' }, h('b', {}, `${hit}/${total}`), h('span', {}, 'identifiers caught')), h('div', { class: 'stat' }, h('b', {}, over), h('span', {}, 'over-redacted (useful context removed)'))),
       miss.length ? fb('bad', 'Still in the note:', miss.join(' · ')) : fb('good', 'Clean.', 'Nothing left that maps back to a person.'),

@@ -1,10 +1,13 @@
-import { state, registerTotal, observeCards, resetAll, updateProgress } from './core.js';
-import * as A from './acts1to3.js';
-import * as B from './acts4to6.js';
-import * as C from './acts7to9.js';
-import * as F from './finale.js';
+import { state, registerTotal, observeCards, resetAll, updateProgress } from './core.js?v=ar-qa-5';
+import * as A from './acts1to3.js?v=ar-qa-5';
+import * as B from './acts4to6.js?v=ar-qa-5';
+import * as C from './acts7to9.js?v=ar-qa-5';
+import * as F from './finale.js?v=ar-qa-5';
+import { initI18n, getLanguage } from './i18n.js?v=ar-qa-5';
 
 const W = { ...A, ...B, ...C, ...F };
+
+initI18n();
 
 document.querySelectorAll('[data-widget]').forEach(card => {
   const fn = W[card.dataset.widget];
@@ -47,7 +50,7 @@ if (state.last && Object.keys(state.done).length) {
 const rb = document.getElementById('restartBtn');
 let armed = false;
 rb.onclick = () => {
-  if (!armed) { armed = true; rb.textContent = 'Tap again to clear all progress'; setTimeout(() => { armed = false; rb.textContent = 'Restart the story'; }, 4000); return; }
+  if (!armed) { armed = true; rb.textContent = getLanguage() === 'ar' ? 'اضغط مرة أخرى لمسح كل التقدم' : 'Tap again to clear all progress'; setTimeout(() => { armed = false; rb.textContent = getLanguage() === 'ar' ? 'أعد القصة من البداية' : 'Restart the story'; }, 4000); return; }
   resetAll(); window.scrollTo(0, 0); location.reload();
 };
 updateProgress();

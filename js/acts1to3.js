@@ -1,5 +1,6 @@
-import { h, $, $$, complete, setFb, fb, wrap, sorter, state, setData, clamp, shuffle } from './core.js';
-import { CLIENT_A, statementHTML } from './data.js';
+import { h, $, $$, complete, setFb, fb, wrap, sorter, state, setData, clamp, shuffle } from './core.js?v=ar-qa-5';
+import { CLIENT_A, statementHTML } from './data.js?v=ar-qa-5';
+import { translate, getLanguage } from './i18n.js?v=ar-qa-5';
 
 /* ---------------- ACT 1 ---------------- */
 export function timeSplit(card) {
@@ -110,11 +111,12 @@ const PARTS = {
 const GUESSES = [['Who is reading?', 'R'], ['What they care about', 'R'], ['Which facts to use', 'M'], ['What to do when facts are missing', 'M'], ['How long', 'F'], ['What structure', 'F'], ['Whether to calculate', 'C'], ['Whether to advise', 'C']];
 export function promptBuilder(card) {
   const w = wrap(card);
-  const on = { R: false, M: false, F: false, C: false };
+  const on = { R: false, M: false, F: false, C: false, ...(state.data[card.dataset.id]?.parts || {}) };
   const left = h('div');
   Object.entries(PARTS).forEach(([k, p]) => {
     const t = h('button', { class: 'toggle', 'aria-pressed': 'false' }, h('span', { class: 'sw' }), h('span', {}, h('b', {}, p.label), h('small', {}, p.hint)));
-    t.onclick = () => { on[k] = !on[k]; t.classList.toggle('on', on[k]); t.setAttribute('aria-pressed', on[k]); render(k); };
+    t.classList.toggle('on', on[k]); t.setAttribute('aria-pressed', on[k]);
+    t.onclick = () => { on[k] = !on[k]; setData(card.dataset.id, { ...(state.data[card.dataset.id] || {}), parts: { ...on } }); t.classList.toggle('on', on[k]); t.setAttribute('aria-pressed', on[k]); render(k); };
     left.append(t);
   });
   const g = h('div', { class: 'guesses' }, h('b', {}, '8'), h('div', {}, h('div', { style: { fontWeight: 600, fontSize: '14px' } }, 'things the assistant has to guess'), h('div', { class: 'guess-list' })));
@@ -130,8 +132,8 @@ export function promptBuilder(card) {
     const solved = GUESSES.filter(([, k]) => on[k]).length;
     g.querySelector('b').textContent = 8 - solved; g.querySelector('b').classList.toggle('zero', solved === 8);
     g.querySelector('.guess-list').replaceChildren(...GUESSES.map(([t, k]) => h('span', { class: on[k] ? 'solved' : '' }, t)));
-    const G = (t) => `<span class="hl-guess" title="Guessed: not in any material">${t}</span>`;
-    const A = (t, k) => k === changed ? `<span class="hl-add">${t}</span>` : t;
+    const G = (t) => `<span class="hl-guess" title="${translate('Guessed: not in any material')}">${translate(t)}</span>`;
+    const A = (t, k) => k === changed ? `<span class="hl-add">${translate(t)}</span>` : translate(t);
     const reader = on.R ? A('For your review with the son (he leads investment questions now).', 'R') : G('Client A is a valued, long-standing client of the bank.');
     const pos = on.M ? A(`Portfolio SAR 45.2m (p.1): murabaha SAR 14.0m maturing 15 Nov 2026; sukuk USD 1.6m; equities SAR 17.4m${on.C ? ', <b>62% in one stock (p.2)</b>' : ''}; real estate fund SAR 7.8m, locked to Dec 2026 (p.2).`, 'M')
       : G('The portfolio of approximately SAR 50m is well balanced across equities, fixed income and alternatives, consistent with a moderate-to-growth appetite.');
@@ -151,7 +153,9 @@ export function promptBuilder(card) {
       h('div', { class: 'outbox' }, h('h6', {}, `Simulated answer · ${words} words`), h('div', { class: 'doc', html: body })),
       h('p', { class: 'muted' }, h('span', { class: 'hl-guess' }, 'red'), ' = guessed, not from any material. ', h('span', { class: 'hl-add' }, 'green'), ' = what your last change added.'));
     if (solved === 8) {
-      setFb(note, 'good', 'Zero guesses left.', 'Which part removed the most red? For most people it is <b>Material</b>: a mediocre prompt with the right documents beats a beautiful one with nothing attached. And <b>Role</b> changes what gets <em>kept</em>: name the reader, and the reader decides what matters. Now try switching Material <em>off</em> with everything else on. It still writes confidently. That is the danger.');
+      setFb(note, 'good', 'Zero guesses left.', getLanguage() === 'ar'
+        ? 'أي جزء خفّض الافتراضات أكثر من غيره؟ غالباً ما تكون الإجابة «المواد»: فالتوجيه المتوسط مع المستندات المناسبة أفضل من توجيه مصقول بلا مرفقات. كما أن «الدور» يحدد ما يُبقى في الإجابة؛ سمِّ القارئ ودعه يقرر ما المهم. جرّب الآن إيقاف «المواد» مع إبقاء الأجزاء الأخرى مفعّلة. ستظل الأداة تكتب بثقة، وهنا تكمن الخطورة.'
+        : 'Which part removed the most red? For most people it is <b>Material</b>: a mediocre prompt with the right documents beats a beautiful one with nothing attached. And <b>Role</b> changes what gets <em>kept</em>: name the reader, and the reader decides what matters. Now try switching Material <em>off</em> with everything else on. It still writes confidently. That is the danger.');
       complete(card.dataset.id);
     } else note.replaceChildren();
   }
@@ -159,13 +163,13 @@ export function promptBuilder(card) {
 }
 
 const LINT = [
-  ['role', 'A role (who it is)', /\byou are\b|\bact as\b|\bas (an?|my) .{0,40}(rm|manager|banker|assistant|analyst)/i],
-  ['reader', 'A named reader', /\b(for|to) (the |my |a )?(client|son|principal|father|reader|family|team head|manager|committee)|\breader\b|\baudience\b/i],
-  ['material', 'Material to work from', /\battach|\busing only|\buse only|\bbased (only )?on|\bfrom (the|my) (notes?|file|statement|meeting)|\bmy notes|\bhere (are|is)/i],
-  ['shape', 'A shape (sections, bullets, email…)', /\bsections?\b|\bbullets?\b|\bparagraphs?\b|\btable\b|\bsubject line\b|\bone (clear )?(action|next step)|\bstructure\b|\bemail\b/i],
-  ['length', 'A length limit in numbers', /\b(under|max(imum)?|no more than|up to|within|less than)\s*\d+|\d+\s*(words|lines|sentences)/i],
-  ['guard', 'At least one "do not"', /\bdo not\b|\bdon't\b|\bnever\b|\bavoid\b|\bno (new )?(commitments?|advice|promises?|recommendations?|pricing)/i],
-  ['gaps', 'What to do if something is missing', /not stated|not available|not in (the|my)|if (anything|something|it) is (missing|unclear)|say so|flag|ask me|unclear/i],
+  ['role', 'A role (who it is)', /\byou are\b|\bact as\b|\bas (an?|my) .{0,40}(rm|manager|banker|assistant|analyst)|بصفتك|أنت (مدير|مديرة)|الدور|تصرّف ك/i],
+  ['reader', 'A named reader', /\b(for|to) (the |my |a )?(client|son|principal|father|reader|family|team head|manager|committee)|\breader\b|\baudience\b|للقارئ|إلى (العميل|الابن|رب الأسرة)|من القارئ|الجمهور/i],
+  ['material', 'Material to work from', /\battach|\busing only|\buse only|\bbased (only )?on|\bfrom (the|my) (notes?|file|statement|meeting)|\bmy notes|\bhere (are|is)|استخدم فقط|استناداً إلى|المرفق|الملف|المواد|محضر الاجتماع|الكشف المرفق/i],
+  ['shape', 'A shape (sections, bullets, email…)', /\bsections?\b|\bbullets?\b|\bparagraphs?\b|\btable\b|\bsubject line\b|\bone (clear )?(action|next step)|\bstructure\b|\bemail\b|أقسام|نقاط|فقرات|جدول|عنوان الرسالة|خطوة تالية|بنية|رسالة بريدية/i],
+  ['length', 'A length limit in numbers', /\b(under|max(imum)?|no more than|up to|within|less than)\s*\d+|\d+\s*(words|lines|sentences)|أقل من\s*\d+|\d+\s*(كلمة|كلمات|سطر|أسطر|جملة|جمل)/i],
+  ['guard', 'At least one "do not"', /\bdo not\b|\bdon't\b|\bnever\b|\bavoid\b|\bno (new )?(commitments?|advice|promises?|recommendations?|pricing)|لا (تذكر|تقدم|توصِ|تجرِ|تُجرِ|تنشئ|تخفف)|يُمنع|تجنب/i],
+  ['gaps', 'What to do if something is missing', /not stated|not available|not in (the|my)|if (anything|something|it) is (missing|unclear)|say so|flag|ask me|unclear|إذا (لم|كان)|عند غياب|غير متوفر|غير موجود|غير واضح|اذكر ذلك/i],
 ];
 export function promptLint(card) {
   const w = wrap(card);
@@ -202,23 +206,25 @@ export function correctPath(card) {
   let round = 1, restarts = 0, quality = 20, stage = 0;
   const say = (cls, who, html) => log.append(h('div', { class: 'bubble ' + cls }, who ? h('small', {}, who) : null, h('div', { html })));
   const upd = () => { meter.firstChild.style.width = quality + '%'; status.replaceChildren(h('span', {}, `Round ${round}`), h('span', {}, `Restarts: ${restarts}`), h('span', {}, `Draft quality ${quality}%`)); };
-  const draft1 = 'Dear Valued Client, I hope this email finds you well! Following our productive meeting, I wanted to take this opportunity to summarise… <i>(380 words)</i> …<b>Markets may well recover strongly next quarter, which could benefit your portfolio.</b> …your <b>loan</b> of SAR 14m with us…';
-  say('ai', 'Assistant · first draft', draft1);
+  const draft1 = getLanguage() === 'ar'
+    ? 'عزيزي العميل، أرجو أن تكون بخير. عقب اجتماعنا المثمر، أود أن أغتنم هذه الفرصة لتلخيص ما دار… <i>(380 كلمة)</i> …<b>قد تتعافى الأسواق بقوة في الربع المقبل، ما قد يعود بالنفع على محفظتكم.</b> …وتمويلكم <b>بقيمة 14 مليون ريال</b> لدينا…'
+    : 'Dear Valued Client, I hope this email finds you well! Following our productive meeting, I wanted to take this opportunity to summarise… <i>(380 words)</i> …<b>Markets may well recover strongly next quarter, which could benefit your portfolio.</b> …your <b>loan</b> of SAR 14m with us…';
+  say('ai', getLanguage() === 'ar' ? 'المساعد · المسودة الأولى' : 'Assistant · first draft', draft1);
   function options() {
     ch.replaceChildren();
     const add = (txt, fn) => ch.append(h('button', { class: 'choice', onclick: fn }, txt));
     if (stage === 0) {
-      add('🔄  Delete it and start a new chat with a slightly different prompt', () => { restarts++; round++; say('sys', null, 'New chat. Everything you told it is gone.'); say('ai', 'Assistant · fresh draft', 'Dear Sir, Thank you for your continued trust… <i>(410 words)</i> …I am confident your <b>loan</b> facility will continue to serve you… <b>we will review your pricing next week</b>.'); if (restarts >= 2) say('sys', null, `Round ${round}, and nothing is fixed. The new chat produced a <b>new</b> problem: a pricing promise.`); upd(); });
-      add('✨  Tell it: "Make it more professional and better."', () => { round++; quality = Math.min(quality + 5, 35); say('me', 'Sara', 'Make it more professional and better.'); say('ai', 'Assistant', 'Esteemed Client, It is with great pleasure that I write following our most productive engagement… <i>(440 words)</i> …your <b>loan</b>…'); say('sys', null, 'Longer, stiffer, same errors. Adjectives carry no information.'); upd(); });
-      add('🎯  Tell it exactly what is wrong, like you would a junior', () => { round++; stage = 1; quality = 70; say('me', 'Sara', 'Three fixes. Under 120 words. Delete the paragraph about markets recovering: that is speculation and we never forecast. It is a <b>murabaha deposit</b>, not a loan. Keep the closing line about the family meeting.'); say('ai', 'Assistant · round ' + round, 'Dear Abu Khalid, thank you for your time on Tuesday. As agreed, your murabaha deposit of SAR 14m matures on 15 November, and we will meet the week before to plan next steps… <i>(112 words)</i>'); say('sys', null, 'Shape and content fixed in one round, because it still had the whole history in view.'); upd(); options(); });
+      add(getLanguage() === 'ar' ? '🔄 احذفها وابدأ محادثة جديدة بتوجيه مختلف قليلاً' : '🔄  Delete it and start a new chat with a slightly different prompt', () => { restarts++; round++; say('sys', null, getLanguage() === 'ar' ? 'محادثة جديدة. فُقد كل ما أخبرتها به.' : 'New chat. Everything you told it is gone.'); say('ai', getLanguage() === 'ar' ? 'المساعد · مسودة جديدة' : 'Assistant · fresh draft', getLanguage() === 'ar' ? 'عزيزي السيد، شكراً لثقتكم المستمرة… <i>(410 كلمات)</i> …نحن على ثقة بأن <b>تسهيل التمويل</b> سيواصل خدمتكم… <b>سنراجع الأسعار الأسبوع المقبل</b>.' : 'Dear Sir, Thank you for your continued trust… <i>(410 words)</i> …I am confident your <b>loan</b> facility will continue to serve you… <b>we will review your pricing next week</b>.'); if (restarts >= 2) say('sys', null, getLanguage() === 'ar' ? `الجولة ${round}، ولم يُحل شيء. أنتجت المحادثة الجديدة مشكلة <b>جديدة</b>: وعداً بمراجعة الأسعار.` : `Round ${round}, and nothing is fixed. The new chat produced a <b>new</b> problem: a pricing promise.`); upd(); });
+      add(getLanguage() === 'ar' ? '✨ قل لها: «اجعليها أكثر مهنية وأفضل»' : '✨  Tell it: "Make it more professional and better."', () => { round++; quality = Math.min(quality + 5, 35); say('me', 'سارة', getLanguage() === 'ar' ? 'اجعليها أكثر مهنية وأفضل.' : 'Make it more professional and better.'); say('ai', getLanguage() === 'ar' ? 'المساعد' : 'Assistant', getLanguage() === 'ar' ? 'عميلنا الكريم، يسرني أن أكتب إليكم عقب اجتماعنا المثمر للغاية… <i>(440 كلمة)</i> …<b>تمويلكم</b>…' : 'Esteemed Client, It is with great pleasure that I write following our most productive engagement… <i>(440 words)</i> …your <b>loan</b>…'); say('sys', null, getLanguage() === 'ar' ? 'أطول وأكثر تكلّفاً، مع الأخطاء نفسها. الصفات لا تضيف معلومات.' : 'Longer, stiffer, same errors. Adjectives carry no information.'); upd(); });
+      add(getLanguage() === 'ar' ? '🎯 حدّد الأخطاء بدقة، كما تفعل مع موظف جديد' : '🎯  Tell it exactly what is wrong, like you would a junior', () => { round++; stage = 1; quality = 70; say('me', 'سارة', translate('Three fixes. Under 120 words. Delete the paragraph about markets recovering: that is speculation and we never forecast. It is a <b>murabaha deposit</b>, not a loan. Keep the closing line about the family meeting.')); say('ai', getLanguage() === 'ar' ? 'المساعد · الجولة ' + round : 'Assistant · round ' + round, translate('Dear Abu Khalid, thank you for your time on Tuesday. As agreed, your murabaha deposit of SAR 14m matures on 15 November, and we will meet the week before to plan next steps…') + ' <i>(' + (getLanguage() === 'ar' ? '112 كلمة' : '112 words') + ')</i>'); say('sys', null, translate('Shape and content fixed in one round, because it still had the whole history in view.')); upd(); options(); });
     } else if (stage === 1) {
-      add('📎  Paste two of your own emails to this family: "Match my style."', () => { round++; stage = 2; quality = 92; say('me', 'Sara', 'Here are two emails I sent this family (redacted). Match my style: shorter sentences, no exclamation marks, warm sign-off.'); say('ai', 'Assistant · round ' + round, 'Abu Khalid, thank you for Tuesday. Your murabaha deposit matures on 15 November; I suggest we meet the week before to decide what comes next. I will send two dates by Sunday. With best regards, Sara'); finish(); upd(); });
-      add('✅  Send it now. It is good enough.', () => { stage = 2; say('sys', null, 'Sent. Correct, but it sounds like a tool wrote it. The client notices the voice before the content.'); finish(); upd(); });
+      add(getLanguage() === 'ar' ? '📎 أرفق رسالتين سابقتين للعائلة وقل: «اتّبعي أسلوبي»' : '📎  Paste two of your own emails to this family: "Match my style."', () => { round++; stage = 2; quality = 92; say('me', 'سارة', translate('Here are two emails I sent this family (redacted). Match my style: shorter sentences, no exclamation marks, warm sign-off.')); say('ai', getLanguage() === 'ar' ? 'المساعد · الجولة ' + round : 'Assistant · round ' + round, translate('Abu Khalid, thank you for Tuesday. Your murabaha deposit matures on 15 November; I suggest we meet the week before to decide what comes next. I will send two dates by Sunday. With best regards, Sara')); finish(); upd(); });
+      add(getLanguage() === 'ar' ? '✅ أرسلها الآن. إنها جيدة بما يكفي.' : '✅  Send it now. It is good enough.', () => { stage = 2; say('sys', null, translate('Sent. Correct, but it sounds like a tool wrote it. The client notices the voice before the content.')); finish(); upd(); });
     }
   }
   function finish() {
-    ch.replaceChildren(fb(restarts ? 'neutral' : 'good', `Done in ${round} rounds with ${restarts} restart${restarts === 1 ? '' : 's'}.`,
-      `${restarts ? 'Every restart threw away the context and introduced new problems. ' : ''}<b>Three rounds is normal, not failure:</b> round one gets the shape, round two fixes the content, round three fixes the voice. If you are on round seven, the problem is upstream: missing material, or a task it cannot do.`));
+    ch.replaceChildren(fb(restarts ? 'neutral' : 'good', getLanguage() === 'ar' ? `اكتمل خلال ${round} جولات، مع ${restarts} مرات إعادة بدء.` : `Done in ${round} rounds with ${restarts} restart${restarts === 1 ? '' : 's'}.`,
+      getLanguage() === 'ar' ? `${restarts ? 'أدى كل بدء جديد إلى فقدان السياق وظهور مشكلات جديدة. ' : ''}<b>ثلاث جولات أمر طبيعي وليس إخفاقاً:</b> تحدد الأولى الشكل، وتصحح الثانية المحتوى، والثالثة تضبط الأسلوب. إذا وصلت إلى الجولة السابعة، فالمشكلة في الأساس: مواد ناقصة أو مهمة لا تستطيع الأداة إنجازها.` : `${restarts ? 'Every restart threw away the context and introduced new problems. ' : ''}<b>Three rounds is normal, not failure:</b> round one gets the shape, round two fixes the content, round three fixes the voice. If you are on round seven, the problem is upstream: missing material, or a task it cannot do.`));
     complete(card.dataset.id, { round, restarts });
   }
   upd(); options();
@@ -244,7 +250,7 @@ export function registerMatch(card) {
       if (sel === r.id) {
         matched++; [lb, b].forEach(x => { x.classList.remove('sel'); x.classList.add('done', 'chip', 'ok'); x.append(h('span', { class: 'tag' }, String(matched))); });
         sel = null;
-        if (matched === 4) { setFb(msg, errors <= 1 ? 'good' : 'neutral', `Matched with ${errors} wrong attempt${errors === 1 ? '' : 's'}.`, 'Same word, four meanings. So never write "make it professional". Name the reader, or better, paste <b>one good past example</b> written for that reader. Two examples are dramatically better than one: with two, it learns what varies and what stays fixed.'); complete(card.dataset.id, { errors }); }
+        if (matched === 4) { setFb(msg, errors <= 1 ? 'good' : 'neutral', getLanguage() === 'ar' ? `تمت المطابقة بعد ${errors} محاولات خاطئة.` : `Matched with ${errors} wrong attempt${errors === 1 ? '' : 's'}.`, getLanguage() === 'ar' ? 'الكلمة نفسها ولها أربعة معانٍ. لذلك لا تكتب «اجعله مهنياً» فقط. حدّد القارئ، أو الأفضل أن ترفق <b>مثالاً سابقاً جيداً</b> كُتب له. مثالان أفضل بكثير من واحد؛ فبهما تتعلم الأداة ما الذي يتغير وما الذي يجب أن يظل ثابتاً.' : 'Same word, four meanings. So never write "make it professional". Name the reader, or better, paste <b>one good past example</b> written for that reader. Two examples are dramatically better than one: with two, it learns what varies and what stays fixed.'); complete(card.dataset.id, { errors }); }
       } else { errors++; b.classList.add('no'); setTimeout(() => b.classList.remove('no'), 500); }
     };
     R.append(b);

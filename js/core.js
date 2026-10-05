@@ -1,4 +1,5 @@
 // Core helpers: DOM, state, progress, shared interaction primitives.
+import { getLanguage, translate, translateTree } from './i18n.js?v=ar-qa-5';
 const KEY = 'rmweek.v1';
 
 export const state = load();
@@ -14,12 +15,13 @@ export function h(tag, attrs = {}, ...kids) {
   for (const [k, v] of Object.entries(attrs || {})) {
     if (v == null || v === false) continue;
     if (k === 'class') e.className = v;
-    else if (k === 'html') e.innerHTML = v;
+    else if (k === 'html') { e.innerHTML = v; translateTree(e); }
     else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
     else if (k === 'style' && typeof v === 'object') Object.assign(e.style, v);
-    else e.setAttribute(k, v === true ? '' : v);
+    else e.setAttribute(k, ['aria-label','title','placeholder','alt'].includes(k) ? translate(String(v)) : (v === true ? '' : v));
   }
-  for (const k of kids.flat()) if (k != null && k !== false) e.append(k.nodeType ? k : document.createTextNode(String(k)));
+  for (const k of kids.flat()) if (k != null && k !== false) e.append(k.nodeType ? k : document.createTextNode(translate(String(k))));
+  if (getLanguage() === 'ar') for (const name of ['aria-label','title','placeholder','alt']) { const val=e.getAttribute(name); if(val) e.setAttribute(name,translate(val)); }
   return e;
 }
 export const $ = (s, r = document) => r.querySelector(s);

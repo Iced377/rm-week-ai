@@ -1,4 +1,5 @@
-import { h, $, $$, complete, setFb, fb, wrap, sorter, shuffle, state, toast } from './core.js';
+import { h, $, $$, complete, setFb, fb, wrap, sorter, shuffle, state, toast } from './core.js?v=ar-qa-5';
+import { getLanguage, translate } from './i18n.js?v=ar-qa-5';
 
 /* ---------------- ACT 7 ---------------- */
 const DIMS = [
@@ -56,13 +57,15 @@ export function narrow(card) {
   const meter = h('div', { class: 'meter' }, h('i'));
   const msg = h('div');
   for (const [k, opts] of Object.entries(NARROW)) {
-    const row = h('div', { class: 'row', style: { margin: '8px 0' } }, h('b', { style: { width: '24px' } }, k));
+    const row = h('div', { class: 'row', style: { margin: '8px 0' } }, h('b', { style: { width: '24px' } }, getLanguage() === 'ar' ? ({ X: 'س', Y: 'ص', Z: 'ع' }[k]) : k));
     opts.forEach((o, i) => { const c = h('button', { class: 'chip' + (i === 0 ? ' on' : '') }, o); c.onclick = () => { pick[k] = i; $$('.chip', row).forEach(x => x.classList.remove('on')); c.classList.add('on'); render(); }; row.append(c); });
     w.append(row);
   }
   w.append(line, h('div', { class: 'row' }, h('b', { style: { fontSize: '14px' } }, 'Testability'), h('div', { style: { flex: 1 } }, meter)), msg);
   function render() {
-    line.innerHTML = `“Give it <u>${NARROW.X[pick.X]}</u>, and it gives you <u>${NARROW.Y[pick.Y]}</u>, in <u>${NARROW.Z[pick.Z]}</u>, every time.”`;
+    line.innerHTML = getLanguage() === 'ar'
+      ? `«زوّدها بـ <u>${translate(NARROW.X[pick.X])}</u>، فتعطيك <u>${translate(NARROW.Y[pick.Y])}</u> في <u>${translate(NARROW.Z[pick.Z])}</u>، في كل مرة.»`
+      : `“Give it <u>${NARROW.X[pick.X]}</u>, and it gives you <u>${NARROW.Y[pick.Y]}</u>, in <u>${NARROW.Z[pick.Z]}</u>, every time.”`;
     const n = pick.X + pick.Y + pick.Z; meter.firstChild.style.width = (n / 6 * 100) + '%';
     if (n === 6) { setFb(msg, 'good', 'Now it can be built and tested.', 'One input shape, one output shape, a time you can measure. You can explain it to a colleague in a minute, test it on three cases, and widen it later. You can almost never rescue a broad tool.'); complete(card.dataset.id); }
     else setFb(msg, 'neutral', n <= 2 ? 'A strategy, not a tool.' : 'Closer.', 'A vague input means you cannot test what it should do with missing documents. A vague output means two runs will never look alike. Make every part concrete.');
