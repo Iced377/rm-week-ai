@@ -1,6 +1,6 @@
-import { h, $, $$, complete, setFb, fb, wrap, sorter, state, setData, clamp, shuffle } from './core.js?v=ar-qa-7';
-import { CLIENT_A, statementHTML } from './data.js?v=ar-qa-7';
-import { translate, getLanguage } from './i18n.js?v=ar-qa-7';
+import { h, $, $$, complete, setFb, fb, wrap, sorter, state, setData, clamp, shuffle } from './core.js?v=ar-qa-8';
+import { CLIENT_A, statementHTML } from './data.js?v=ar-qa-8';
+import { translate, getLanguage } from './i18n.js?v=ar-qa-8';
 
 /* ---------------- ACT 1 ---------------- */
 export function timeSplit(card) {
@@ -392,4 +392,25 @@ export function errorHunt(card) {
         'Every error sat in a sentence that sounded exactly like its neighbours. With page references on every figure, this check takes about ninety seconds. Without them, you would be re-reading the whole file. <b>Ask for the page, every time.</b>'));
     complete(card.dataset.id, { found, fp, secs });
   }
+}
+
+// Slide 15: bank-ready or still a draft?
+const BANKREADY = [
+  { id: 'b1', text: "\"Murabaha deposit SAR 14.0m, maturing 15 Nov 2026 (statement, p.1).\"", bin: 'ready', why: "Figures: the number has a source you can point to." },
+  { id: 'b2', text: "\"The portfolio is worth approximately SAR 50m and has performed well this year.\"", bin: 'draft', why: "Figures: plausible, unchecked, and no source. The statement says SAR 45.2m." },
+  { id: 'b3', text: "\"Risk profile dated Feb 2024 (p.4). Refresh is due before any new product discussion.\"", bin: 'ready', why: "Claims: specific, and only what the material says." },
+  { id: 'b4', text: "\"The client is a valued, long-standing customer with a strong relationship with the bank.\"", bin: 'draft', why: "Claims: generic and confident. Nothing in the file says this." },
+  { id: 'b5', text: "\"Abu Khalid, thank you for Tuesday. I will send the updated proposal by Sunday.\"", bin: 'ready', why: "Voice: short, warm, sounds like the RM and the bank." },
+  { id: 'b6', text: "\"We are thrilled to leverage our holistic, best-in-class solutions to unlock value for you!\"", bin: 'draft', why: "Voice: generic corporate. Every client recognises it." },
+  { id: 'b7', text: "\"Management fee 0.5% a year, per the current fund fact sheet (p.2).\"", bin: 'ready', why: "Policy: consistent with the current product terms and disclosures." },
+  { id: 'b8', text: "\"Based on your profile, this fund is suitable and we can offer a preferential profit rate.\"", bin: 'draft', why: "Policy: a suitability view and a pricing commitment nobody approved." },
+  { id: 'b9', text: "A brief the RM read line by line, with three figures checked against the statement.", bin: 'ready', why: "Accountability: you read it before it left." },
+  { id: 'b10', text: "A clean, well-formatted summary forwarded two minutes after the tool produced it.", bin: 'draft', why: "Accountability: nobody read it. Tidy formatting is not a check." }
+];
+export function bankReady(card) {
+  const w = wrap(card); const res = h('div');
+  sorter({ host: w, items: shuffle(BANKREADY, 7), explain: true,
+    bins: [{ id: 'ready', label: 'Bank-ready', color: '#1E7F5C' }, { id: 'draft', label: 'Still a draft', color: '#B4432F' }],
+    onDone: (ok, n) => { setFb(res, ok >= 8 ? 'good' : 'neutral', `${ok} of ${n} correct.`, (getLanguage() === 'ar' ? "خمسة معايير في كل مرة: <b>أرقام</b> مُسنَدة إلى مصدر، و<b>معلومات</b> واردة في المادة، و<b>أسلوبك</b> أنت، و<b>سياسات</b> البنك الحالية، و<b>قراءتك</b> لها سطراً سطراً. إذا أخفقت في معيار واحد فهي ما زالت مسودة." : 'Five tests, every time: <b>figures</b> with a source, <b>claims</b> found in the material, your <b>voice</b>, current <b>policy</b>, and <b>you read it</b> line by line. Fail one and it is still a draft.')); complete(card.dataset.id, { ok }); } });
+  w.append(res);
 }

@@ -1,9 +1,9 @@
-import { state, registerTotal, observeCards, resetAll, updateProgress } from './core.js?v=ar-qa-7';
-import * as A from './acts1to3.js?v=ar-qa-7';
-import * as B from './acts4to6.js?v=ar-qa-7';
-import * as C from './acts7to9.js?v=ar-qa-7';
-import * as F from './finale.js?v=ar-qa-7';
-import { initI18n, getLanguage } from './i18n.js?v=ar-qa-7';
+import { state, registerTotal, observeCards, resetAll, updateProgress } from './core.js?v=ar-qa-8';
+import * as A from './acts1to3.js?v=ar-qa-8';
+import * as B from './acts4to6.js?v=ar-qa-8';
+import * as C from './acts7to9.js?v=ar-qa-8';
+import * as F from './finale.js?v=ar-qa-8';
+import { initI18n, getLanguage } from './i18n.js?v=ar-qa-8';
 
 const W = { ...A, ...B, ...C, ...F };
 
@@ -58,7 +58,7 @@ updateProgress();
 // Facilitator cue: at which slide to stop and open each activity.
 // [day, stop after slide, 'b' = before the explaining slides / 'a' = after, slides]
 const CUES = {
-  'a1-split':[1,7,'b','8'],'a1-sort':[1,12,'a','9–12'],'a1-breakeven':[1,13,'b','14'],
+  'a1-split':[1,7,'b','8'],'a1-sort':[1,12,'a','9–12'],'a1-breakeven':[1,13,'b','14'],'a1-bankready':[1,15,'a','15'],
   'a2-builder':[1,18,'b','19–23'],'a2-match':[1,19,'b','20–22'],'a2-lint':[1,24,'a','19–24'],'a2-path':[1,26,'b','27–29'],
   'a3-pattern':[1,45,'b','46–47'],'a3-confidence':[1,45,'b','46–47'],'a3-pushback':[1,49,'a','48–49'],'a3-hunt':[1,50,'a','48–50'],
   'a4-moves':[1,34,'a','34'],'a4-middle':[1,39,'b','40'],'a4-order':[1,43,'a','41–43'],

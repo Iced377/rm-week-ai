@@ -1,5 +1,5 @@
 // Core helpers: DOM, state, progress, shared interaction primitives.
-import { getLanguage, translate, translateTree } from './i18n.js?v=ar-qa-7';
+import { getLanguage, translate, translateTree } from './i18n.js?v=ar-qa-8';
 const KEY = 'rmweek.v1';
 
 export const state = load();
