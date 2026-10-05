@@ -401,3 +401,6 @@ html[dir="rtl"] .bp-col ol,html[dir="rtl"] .case ul{padding-left:0;padding-right
 html[dir="rtl"] .topbar{flex-direction:row-reverse}
 html[dir="rtl"] .actnav{direction:rtl}
 html[dir="rtl"] svg text{direction:ltr;unicode-bidi:isolate}
+.cue{display:block;width:fit-content;max-width:100%;font-size:12.5px;font-weight:600;padding:5px 12px;border-radius:8px;margin-bottom:12px;border:1px dashed}
+.cue-b{color:#8A5A00;background:#FFF4D6;border-color:#D9A93A}
+.cue-a{color:#1F5F4A;background:#E4F3EC;border-color:#6FB79A}
