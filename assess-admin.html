@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="referrer" content="no-referrer">
+<title>Assessment results</title>
+<style>
+:root{--bg:#F6F2EA;--paper:#FFFDF8;--ink:#152040;--ink2:#3D4763;--muted:#6B7385;--line:#DCD3BF;--navy:#1C2D5E;--good:#1E7F5C;--bad:#B4432F}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:1100px;margin:0 auto;padding:24px 16px 80px}
+h1{font-size:24px;margin:0 0 4px}h2{font-size:17px;margin:28px 0 10px}
+.muted{color:var(--muted)}
+.box{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+button{font:inherit;font-weight:600;padding:8px 14px;border-radius:99px;border:1px solid var(--navy);background:var(--navy);color:#fff;cursor:pointer}
+button.ghost{background:transparent;color:var(--navy)}button.danger{border-color:var(--bad);background:transparent;color:var(--bad)}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+td.name{font-weight:600;unicode-bidi:plaintext}
+.up{color:var(--good);font-weight:700}.down{color:var(--bad);font-weight:700}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.stat b{display:block;font-size:26px}
+.qr{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.qr .box{text-align:center}.qr img,.qr svg{width:220px;height:220px;max-width:100%}
+.link{font:12px ui-monospace,monospace;word-break:break-all;color:var(--ink2)}
+ol.ql{padding-left:22px}ol.ql li{margin:8px 0;unicode-bidi:plaintext}ol.ql .a{color:var(--good);font-weight:600}
+.keys{font:14px ui-monospace,monospace;word-break:break-all;background:#fff;border:1px dashed var(--line);border-radius:10px;padding:10px;margin:6px 0}
+[hidden]{display:none!important}
+@media print{.noprint{display:none!important}body{background:#fff}}
+</style>
+</head>
+<body>
+<main>
+  <h1>Pre / post assessment</h1>
+  <p class="muted" id="status">Loading…</p>
+
+  <section id="setup" hidden>
+    <div class="box">
+      <h2 style="margin-top:0">Set-up complete. Save this link now.</h2>
+      <p>This is your private results link. It is shown <b>once</b> and cannot be recovered. Bookmark it or store it in your password manager, and do not share it.</p>
+      <div class="keys" id="adminLink"></div>
+      <div class="row"><button id="copyAdmin">Copy link</button><button class="ghost" id="goAdmin">Open results</button></div>
+    </div>
+  </section>
+
+  <section id="app" hidden>
+    <div class="stats box" id="stats"></div>
+    <div class="row noprint">
+      <button class="ghost" id="refresh">Refresh</button>
+      <button class="ghost" id="csv">Download CSV</button>
+      <button class="ghost" id="toggle"></button>
+      <button class="danger" id="newcode">New QR codes</button>
+      <button class="danger" id="wipe">Delete all results</button>
+    </div>
+    <h2>Participants</h2>
+    <div class="box tablewrap"><table id="table"></table></div>
+    <h2>Most-missed questions</h2>
+    <div class="box tablewrap"><table id="missed"></table></div>
+    <h2 class="noprint">QR codes for the room</h2>
+    <div class="qr noprint" id="qr"></div>
+    <h2>Questions and correct answers</h2>
+    <div class="box"><ol class="ql" id="ql" dir="auto"></ol></div>
+  </section>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const el = (t, props = {}, ...kids) => { const e = Object.assign(document.createElement(t), props); e.append(...kids); return e; };
+  const hash = location.hash.slice(1);
+  const status = t => { $('status').textContent = t; };
+  let key = hash, data = null;
+
+  if (hash === 'setup') {
+    fetch('/api/assess?action=setup', { method: 'POST' }).then(async r => {
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok) return status(j.error === 'already_set_up' ? 'Already set up. Open your saved private results link instead.' : j.error === 'storage_not_connected' ? 'The database is not connected to this project yet.' : 'Set-up failed. Try again.');
+      const link = `${location.origin}/assess-admin#${j.admin}`;
+      history.replaceState(null, '', location.pathname);
+      status(''); $('setup').hidden = false; $('adminLink').textContent = link;
+      $('copyAdmin').onclick = () => navigator.clipboard.writeText(link).then(() => { $('copyAdmin').textContent = 'Copied'; });
+      $('goAdmin').onclick = () => { location.hash = j.admin; location.reload(); };
+    }).catch(() => status('Set-up failed. Try again.'));
+    return;
+  }
+  if (!/^[\w-]{20,}$/.test(hash)) return status('This page needs your private results link.');
+
+  const call = (action, body) => fetch(`/api/assess?action=${action}`, { method: body ? 'POST' : 'GET', headers: { 'x-admin-key': key, 'Content-Type': 'application/json' }, body: body ? JSON.stringify(body) : undefined, cache: 'no-store' }).then(async r => ({ ok: r.ok, data: await r.json().catch(() => ({})) }));
+  const wrongTxt = r => (r ? (r.wrong.length ? r.wrong.map(n => 'Q' + n).join(', ') : 'none') : '');
+
+  function qrBox(title, link) {
+    const box = el('div', { className: 'box' }, el('h3', { textContent: title, style: 'margin:0 0 8px' }));
+    const holder = el('div'); if (typeof qrcode === 'function') { const q = qrcode(0, 'M'); q.addData(link); q.make(); holder.innerHTML = q.createSvgTag({ cellSize: 6, margin: 2, scalable: true }); } else holder.textContent = 'QR library did not load; use the link below.'; box.append(holder, el('div', { className: 'link', textContent: link }));
+    return box;
+  }
+  function render() {
+    const names = [...new Set([...Object.keys(data.pre), ...Object.keys(data.post)])].sort((a, b) => a.localeCompare(b, 'ar'));
+    const total = data.questions.length, avg = o => { const v = Object.values(o); return v.length ? (v.reduce((s, r) => s + r.score, 0) / v.length).toFixed(1) : '–'; };
+    $('stats').replaceChildren(...[['Pre-tests', Object.keys(data.pre).length], ['Post-tests', Object.keys(data.post).length], ['Average before', avg(data.pre) + ' / ' + total], ['Average after', avg(data.post) + ' / ' + total], ['Form', data.open ? 'Open' : 'Closed']].map(([l, v]) => el('div', { className: 'stat' }, el('b', { textContent: v }), el('span', { className: 'muted', textContent: l }))));
+    const t = $('table'); t.replaceChildren(el('tr', {}, ...['Name', 'Before', 'After', 'Change', 'Wrong before', 'Wrong after'].map(h => el('th', { textContent: h }))));
+    names.forEach(n => { const a = data.pre[n], b = data.post[n]; const d = a && b ? b.score - a.score : null;
+      t.append(el('tr', {}, el('td', { className: 'name', textContent: n }), el('td', { textContent: a ? `${a.score}/${total}` : '–' }), el('td', { textContent: b ? `${b.score}/${total}` : '–' }), el('td', { className: d > 0 ? 'up' : d < 0 ? 'down' : '', textContent: d === null ? '–' : (d > 0 ? '+' : '') + d }), el('td', { textContent: wrongTxt(a) || '–' }), el('td', { textContent: wrongTxt(b) || '–' }))); });
+    if (!names.length) t.append(el('tr', {}, el('td', { colSpan: 6, className: 'muted', textContent: 'No submissions yet.' })));
+    const cnt = o => data.questions.map(q => Object.values(o).filter(r => r.wrong.includes(q.n)).length);
+    const cp = cnt(data.pre), cq = cnt(data.post); const m = $('missed');
+    m.replaceChildren(el('tr', {}, ...['Question', 'Wrong before', 'Wrong after'].map(h => el('th', { textContent: h }))));
+    data.questions.forEach((q, i) => m.append(el('tr', {}, el('td', { className: 'name', textContent: `Q${q.n}. ${q.q}` }), el('td', { textContent: cp[i] }), el('td', { textContent: cq[i] }))));
+    $('ql').replaceChildren(...data.questions.map(q => el('li', {}, q.q, el('br'), el('span', { className: 'a', textContent: '✓ ' + q.options[q.answer] }))));
+    $('toggle').textContent = data.open ? 'Close the form' : 'Reopen the form';
+    $('qr').replaceChildren(qrBox('Pre-assessment', `${location.origin}/assess#pre.${data.code}`), qrBox('Post-assessment', `${location.origin}/assess#post.${data.code}`));
+  }
+  async function load() {
+    const r = await call('results');
+    if (!r.ok) return status(r.data.error === 'unauthorized' ? 'This link is not valid.' : r.data.error === 'not_set_up' ? 'Not set up yet. Open /assess-admin#setup once.' : 'Could not load results.');
+    data = r.data; status('Private page. Do not share this link. Updated ' + new Date().toLocaleTimeString()); $('app').hidden = false; render();
+  }
+  const twoTap = (btn, label, fn) => { let armed = false; btn.onclick = async () => { if (!armed) { armed = true; const old = btn.textContent; btn.textContent = label; setTimeout(() => { armed = false; btn.textContent = old; }, 4000); return; } armed = false; await fn(); load(); }; };
+  $('refresh').onclick = load;
+  $('toggle').onclick = async () => { await call('admin', { do: data.open ? 'close' : 'open' }); load(); };
+  twoTap($('wipe'), 'Click again to delete everything', () => call('admin', { do: 'wipe' }));
+  twoTap($('newcode'), 'Click again: old QR codes stop working', () => call('admin', { do: 'newcode' }));
+  $('csv').onclick = () => {
+    const total = data.questions.length, esc = v => '"' + String(v ?? '').replace(/"/g, '""') + '"';
+    const names = [...new Set([...Object.keys(data.pre), ...Object.keys(data.post)])];
+    const rows = [['Name', 'Before', 'After', 'Change', 'Wrong before', 'Wrong after', 'Out of']].concat(names.map(n => { const a = data.pre[n], b = data.post[n]; return [n, a ? a.score : '', b ? b.score : '', a && b ? b.score - a.score : '', wrongTxt(a), wrongTxt(b), total]; }));
+    const blob = new Blob(['﻿' + rows.map(r => r.map(esc).join(',')).join('\r\n')], { type: 'text/csv' });
+    const a = el('a', { href: URL.createObjectURL(blob), download: 'assessment-results.csv' }); a.click(); URL.revokeObjectURL(a.href);
+  };
+  load();
+})();
+</script>
+</body>
+</html>

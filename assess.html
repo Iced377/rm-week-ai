@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="referrer" content="no-referrer">
+<title>تقييم الدورة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F6F2EA;--paper:#FFFDF8;--ink:#152040;--ink2:#3D4763;--muted:#6B7385;--line:#DCD3BF;--navy:#1C2D5E;--gold:#B8862B;--good:#1E7F5C;--bad:#B4432F}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Naskh Arabic",system-ui,sans-serif;font-size:18px;line-height:1.8}
+main{max-width:720px;margin:0 auto;padding:24px 16px 80px}
+h1{font-size:28px;line-height:1.4;margin:8px 0 4px}
+.tag{display:inline-block;font-size:14px;font-weight:700;color:var(--gold);border:1px solid var(--gold);border-radius:99px;padding:2px 14px}
+.lead{color:var(--ink2);margin:0 0 20px}
+.box{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:18px;margin:14px 0}
+label.f{display:block;font-weight:700;margin-bottom:8px}
+input[type=text],select{width:100%;font:inherit;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink)}
+.q h2{font-size:19px;line-height:1.7;margin:0 0 10px}
+.q .num{color:var(--gold);font-weight:700;margin-inline-end:6px}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid var(--line);border-radius:12px;margin:8px 0;cursor:pointer;background:#fff}
+.opt:has(input:checked){border-color:var(--navy);background:#EEF1FA}
+.opt input{margin-top:9px;width:18px;height:18px;flex:0 0 auto;accent-color:var(--navy)}
+.q.miss{border-color:var(--bad)}
+button{font:inherit;font-weight:700;width:100%;padding:14px;border:0;border-radius:99px;background:var(--navy);color:#fff;cursor:pointer}
+button[disabled]{opacity:.5}
+.msg{font-weight:700;margin:12px 0;min-height:1.8em}
+.msg.bad{color:var(--bad)}
+.done{text-align:center;padding:40px 18px}
+.score{font-size:54px;font-weight:700;color:var(--good);direction:ltr}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+  <span class="tag" id="tag"></span>
+  <h1>الذكاء الاصطناعي لمديري العلاقات</h1>
+  <p class="lead" id="lead">جارٍ التحميل…</p>
+  <form id="form" hidden novalidate>
+    <div class="box">
+      <label class="f" id="nameLabel" for="name"></label>
+      <input type="text" id="name" maxlength="60" autocomplete="name" hidden>
+      <select id="pick" hidden></select>
+    </div>
+    <div id="qs"></div>
+    <p class="msg bad" id="msg" role="alert"></p>
+    <button type="submit" id="send">إرسال الإجابات</button>
+  </form>
+  <div class="box done" id="done" hidden>
+    <h2 id="doneTitle">شكراً لك</h2>
+    <div class="score" id="score" hidden></div>
+    <p id="doneText"></p>
+  </div>
+</main>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const m = location.hash.slice(1).match(/^(pre|post)\.([\w-]{8,})$/);
+  const ERR = { unauthorized: 'هذا الرابط غير صالح. امسح رمز QR من الشاشة مرة أخرى.', closed: 'التقييم مغلق حالياً.', duplicate: 'سبق تسجيل إجابات بهذا الاسم.', name: 'اكتب اسمك الكامل.', incomplete: 'أجب عن جميع الأسئلة.', unknown_name: 'اختر اسمك من القائمة.', full: 'اكتمل العدد.', not_set_up: 'التقييم غير مفعّل بعد.', storage_not_connected: 'التقييم غير مفعّل بعد.' };
+  const fail = e => { $('lead').textContent = ERR[e] || 'تعذّر الاتصال. حاول مرة أخرى.'; };
+  if (!m) return fail('unauthorized');
+  const [, phase, code] = m;
+  const api = (action, opt = {}) => fetch(`/api/assess?action=${action}&phase=${phase}`, { ...opt, headers: { 'x-class-code': code, 'Content-Type': 'application/json' }, cache: 'no-store' }).then(async r => ({ ok: r.ok, data: await r.json().catch(() => ({})) }));
+  const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  $('tag').textContent = phase === 'pre' ? 'التقييم القبلي' : 'التقييم البعدي';
+  let questions = [];
+  api('form').then(({ ok, data }) => {
+    if (!ok) return fail(data.error);
+    questions = data.questions;
+    $('lead').textContent = 'عشرة أسئلة، لكل سؤال إجابة واحدة صحيحة. يستغرق نحو خمس دقائق.';
+    if (phase === 'pre') { $('nameLabel').textContent = 'الاسم الكامل'; $('name').hidden = false; }
+    else {
+      $('nameLabel').textContent = 'اختر اسمك'; $('nameLabel').htmlFor = 'pick';
+      const s = $('pick'); s.hidden = false; s.add(new Option('— اختر اسمك —', ''));
+      data.names.forEach(n => s.add(new Option(n, n)));
+      if (!data.names.length) $('msg').textContent = 'لا توجد أسماء متاحة. أخبر المدرب.';
+    }
+    shuffle(questions).forEach((q, k) => {
+      const box = document.createElement('div'); box.className = 'box q'; box.dataset.n = q.n;
+      const h = document.createElement('h2'); const num = document.createElement('span'); num.className = 'num'; num.textContent = (k + 1) + '.'; h.append(num, q.q); box.append(h);
+      shuffle(q.options.map((t, i) => [t, i])).forEach(([t, i]) => {
+        const l = document.createElement('label'); l.className = 'opt';
+        const r = document.createElement('input'); r.type = 'radio'; r.name = 'q' + q.n; r.value = i;
+        const sp = document.createElement('span'); sp.textContent = t; l.append(r, sp); box.append(l);
+      });
+      $('qs').append(box);
+    });
+    $('form').hidden = false;
+  }).catch(() => fail());
+  $('form').addEventListener('submit', async e => {
+    e.preventDefault(); $('msg').textContent = '';
+    const name = (phase === 'pre' ? $('name').value : $('pick').value).trim();
+    if (name.length < 2) { $('msg').textContent = ERR[phase === 'pre' ? 'name' : 'unknown_name']; (phase === 'pre' ? $('name') : $('pick')).focus(); return; }
+    const answers = []; let first = null;
+    questions.forEach(q => { const c = document.querySelector(`input[name="q${q.n}"]:checked`); const box = document.querySelector(`.q[data-n="${q.n}"]`); box.classList.toggle('miss', !c); if (!c && !first) first = box; answers[q.n - 1] = c ? Number(c.value) : -1; });
+    if (first) { $('msg').textContent = ERR.incomplete; first.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+    $('send').disabled = true;
+    try {
+      const { ok, data } = await api('submit', { method: 'POST', body: JSON.stringify({ phase, name, answers }) });
+      if (!ok) { $('msg').textContent = ERR[data.error] || 'تعذّر الإرسال. حاول مرة أخرى.'; $('send').disabled = false; return; }
+      $('form').hidden = true; $('lead').hidden = true; $('done').hidden = false;
+      if (phase === 'post') { $('score').hidden = false; $('score').textContent = `${data.score} / ${data.total}`; $('doneText').textContent = 'هذه نتيجتك في التقييم البعدي. شكراً لمشاركتك.'; }
+      else $('doneText').textContent = 'تم حفظ إجاباتك. يمكنك إغلاق هذه الصفحة.';
+      window.scrollTo(0, 0);
+    } catch { $('msg').textContent = 'تعذّر الإرسال. تحقق من الاتصال وحاول مرة أخرى.'; $('send').disabled = false; }
+  });
+})();
+</script>
+</body>
+</html>
