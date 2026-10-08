@@ -410,3 +410,25 @@ html[dir="rtl"] .card.completed:before{right:auto;left:20px}
 .tone-head h4{margin:0}
 .tone-text{white-space:pre-wrap;word-break:break-word;font:inherit;font-size:14.5px;line-height:1.75;background:var(--bg2);border-radius:10px;padding:12px 14px;margin:12px 0 8px;max-height:320px;overflow:auto;unicode-bidi:plaintext;text-align:start}
 .tone-privacy{margin-top:14px;font-weight:600}
+.theory{margin:22px 0;border:1px solid #D9C9A3;border-radius:18px;background:#FBF6EA;font-family:var(--ar);direction:rtl;text-align:right}
+.th-toggle{display:flex;justify-content:space-between;align-items:center;width:100%;gap:12px;padding:14px 20px;background:none;border:0;cursor:pointer;font:700 15px var(--ar);color:#8A5A00}
+.th-chev{transition:transform .2s}.theory.closed .th-chev{transform:rotate(90deg)}.theory.closed .th-body{display:none}
+.th-body{padding:0 20px 18px;display:grid;gap:14px}
+.th-slide{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.th-meta{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.th-num{display:inline-grid;place-items:center;min-width:30px;height:30px;padding:0 6px;border-radius:99px;background:var(--navy);color:#fff;font:700 13px var(--sans)}
+.th-kicker{font-size:13px;color:var(--muted)}
+.th-slide h4{font-family:var(--ar);font-size:20px;line-height:1.5;margin:4px 0 8px;color:var(--ink)}
+.th-slide h5{font-family:var(--ar);font-size:15px;margin:12px 0 4px;color:#8A5A00}
+.th-slide ul{margin:0;padding:0 18px 0 0;display:grid;gap:6px}
+.th-slide li{line-height:1.85;color:var(--ink2);font-size:16px}
+.th-slide li b{color:var(--ink)}
+.th-tag{display:inline-block;font-size:12px;font-weight:600;color:var(--navy2);background:#E8ECF7;border-radius:99px;padding:1px 9px;margin-inline-start:6px}
+.th-tablewrap{overflow-x:auto}
+.th-table{border-collapse:collapse;width:100%;font-size:15px}
+.th-table th,.th-table td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:right;vertical-align:top;line-height:1.7}
+.th-table tr:first-child th{background:#F1EADA;font-size:13px}
+@media print{.theory{break-inside:auto}.th-slide{break-inside:avoid}}
+html[dir="rtl"] .skip,html[dir="rtl"] .skip:focus{left:auto;right:12px}
+html[dir="rtl"] .skip:not(:focus){clip-path:inset(50%);width:1px;height:1px;overflow:hidden;white-space:nowrap}
+html,body{overflow-x:clip}

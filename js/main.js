@@ -1,10 +1,11 @@
-import { state, registerTotal, observeCards, resetAll, updateProgress } from './core.js?v=ar-qa-9';
-import * as A from './acts1to3.js?v=ar-qa-9';
-import * as B from './acts4to6.js?v=ar-qa-9';
-import * as C from './acts7to9.js?v=ar-qa-9';
-import * as F from './finale.js?v=ar-qa-9';
-import * as TP from './tone.js?v=ar-qa-9';
-import { initI18n, getLanguage } from './i18n.js?v=ar-qa-9';
+import { state, registerTotal, observeCards, resetAll, updateProgress } from './core.js?v=ar-qa-10';
+import * as A from './acts1to3.js?v=ar-qa-10';
+import * as B from './acts4to6.js?v=ar-qa-10';
+import * as C from './acts7to9.js?v=ar-qa-10';
+import * as F from './finale.js?v=ar-qa-10';
+import * as TP from './tone.js?v=ar-qa-10';
+import { insertTheory } from './theory.js?v=ar-qa-10';
+import { initI18n, getLanguage } from './i18n.js?v=ar-qa-10';
 
 const W = { ...A, ...B, ...C, ...F, ...TP };
 
@@ -69,6 +70,7 @@ const CUES = {
   'a8-assemble':[2,21,'b','22–25'],'a8-examples':[2,23,'b','24'],'a8-stress':[2,49,'a','45–49'],
   'a9-case':[2,60,'b','61'],'a9-keep':[2,64,'a','64'],'quiz':[2,73,'a','1–73'],
 };
+insertTheory(CUES);
 const ar = getLanguage() === 'ar';
 for (const [id, [d, s, w, ref]] of Object.entries(CUES)) {
   const card = document.querySelector(`.card[data-id="${id}"]`); if (!card) continue;
