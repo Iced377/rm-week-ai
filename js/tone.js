@@ -1,6 +1,6 @@
 // Two copyable prompts for building a "my-tone" Skill in Claude. Rendered in the reader's language; never auto-translated.
-import { h, complete } from './core.js?v=ar-qa-10';
-import { getLanguage } from './i18n.js?v=ar-qa-10';
+import { h, complete } from './core.js?v=ar-qa-11';
+import { getLanguage } from './i18n.js?v=ar-qa-11';
 
 const T = {
   en: {

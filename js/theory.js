@@ -1,6 +1,6 @@
 // "From the deck" panels: the slide content shown inline, right before the activity it leads into.
-import { SLIDES } from './theory-data.js?v=ar-qa-10';
-import { getLanguage } from './i18n.js?v=ar-qa-10';
+import { SLIDES } from './theory-data.js?v=ar-qa-11';
+import { getLanguage } from './i18n.js?v=ar-qa-11';
 
 const RANGES = { 1: [1, 1, 16], 2: [1, 17, 30], 3: [1, 45, 53], 4: [1, 31, 44], 5: [1, 54, 65], 6: [1, 66, 79], 7: [2, 1, 19], 8: [2, 20, 53], 9: [2, 54, 71], 10: [2, 72, 77] };
 const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));

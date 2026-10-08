@@ -1,5 +1,8 @@
 const KEY = 'rmweek.language';
 const AR = {
+  "Designed and authored by": "تصميم وإعداد:",
+  "Interactive platform designed and authored by": "المنصة التفاعلية من تصميم وإعداد:",
+  "Mohamad Abdallah El Izmirli": "محمد عبدالله الإزميرلي",
   "\"Murabaha deposit SAR 14.0m, maturing 15 Nov 2026 (statement, p.1).\"": "«وديعة مرابحة بقيمة 14.0 مليون ريال تستحق في 15 نوفمبر 2026 (الكشف، ص. 1).»",
   "\"The portfolio is worth approximately SAR 50m and has performed well this year.\"": "«تبلغ قيمة المحفظة نحو 50 مليون ريال وقد حققت أداءً جيداً هذا العام.»",
   "\"Risk profile dated Feb 2024 (p.4). Refresh is due before any new product discussion.\"": "«ملف المخاطر مؤرخ في فبراير 2024 (ص. 4)، ويلزم تحديثه قبل مناقشة أي منتج جديد.»",
@@ -1285,7 +1288,7 @@ const DYNAMIC = [
   [/^(\d+) of (\d+)$/, (_m,a,b)=>`${a} من ${b}`],
 ];
 
-export function getLanguage() { return localStorage.getItem(KEY) === 'ar' ? 'ar' : 'en'; }
+export function getLanguage() { try { return localStorage.getItem(KEY) === 'en' ? 'en' : 'ar'; } catch { return 'ar'; } }
 export function translate(value) {
   if (typeof value !== 'string' || getLanguage() !== 'ar') return value;
   const trimmed = value.trim();

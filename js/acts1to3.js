@@ -1,6 +1,6 @@
-import { h, $, $$, complete, setFb, fb, wrap, sorter, state, setData, clamp, shuffle } from './core.js?v=ar-qa-10';
-import { CLIENT_A, statementHTML } from './data.js?v=ar-qa-10';
-import { translate, getLanguage } from './i18n.js?v=ar-qa-10';
+import { h, $, $$, complete, setFb, fb, wrap, sorter, state, setData, clamp, shuffle } from './core.js?v=ar-qa-11';
+import { CLIENT_A, statementHTML } from './data.js?v=ar-qa-11';
+import { translate, getLanguage } from './i18n.js?v=ar-qa-11';
 
 /* ---------------- ACT 1 ---------------- */
 export function timeSplit(card) {

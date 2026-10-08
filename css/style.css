@@ -432,3 +432,6 @@ html[dir="rtl"] .card.completed:before{right:auto;left:20px}
 html[dir="rtl"] .skip,html[dir="rtl"] .skip:focus{left:auto;right:12px}
 html[dir="rtl"] .skip:not(:focus){clip-path:inset(50%);width:1px;height:1px;overflow:hidden;white-space:nowrap}
 html,body{overflow-x:clip}
+.byline{margin:-4px 0 18px;font-size:15px;color:var(--ink2)}
+.byline b{color:var(--navy);font-weight:700}
+.foot-author{font-size:15px}.foot-author b{color:var(--ink)}

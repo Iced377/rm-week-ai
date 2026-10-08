@@ -1,11 +1,11 @@
-import { state, registerTotal, observeCards, resetAll, updateProgress } from './core.js?v=ar-qa-10';
-import * as A from './acts1to3.js?v=ar-qa-10';
-import * as B from './acts4to6.js?v=ar-qa-10';
-import * as C from './acts7to9.js?v=ar-qa-10';
-import * as F from './finale.js?v=ar-qa-10';
-import * as TP from './tone.js?v=ar-qa-10';
-import { insertTheory } from './theory.js?v=ar-qa-10';
-import { initI18n, getLanguage } from './i18n.js?v=ar-qa-10';
+import { state, registerTotal, observeCards, resetAll, updateProgress } from './core.js?v=ar-qa-11';
+import * as A from './acts1to3.js?v=ar-qa-11';
+import * as B from './acts4to6.js?v=ar-qa-11';
+import * as C from './acts7to9.js?v=ar-qa-11';
+import * as F from './finale.js?v=ar-qa-11';
+import * as TP from './tone.js?v=ar-qa-11';
+import { insertTheory } from './theory.js?v=ar-qa-11';
+import { initI18n, getLanguage } from './i18n.js?v=ar-qa-11';
 
 const W = { ...A, ...B, ...C, ...F, ...TP };
 

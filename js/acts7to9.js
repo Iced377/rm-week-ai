@@ -1,5 +1,5 @@
-import { h, $, $$, complete, setFb, fb, wrap, sorter, shuffle, state, toast } from './core.js?v=ar-qa-10';
-import { getLanguage, translate } from './i18n.js?v=ar-qa-10';
+import { h, $, $$, complete, setFb, fb, wrap, sorter, shuffle, state, toast } from './core.js?v=ar-qa-11';
+import { getLanguage, translate } from './i18n.js?v=ar-qa-11';
 
 /* ---------------- ACT 7 ---------------- */
 const DIMS = [
