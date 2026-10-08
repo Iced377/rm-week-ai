@@ -1,11 +1,12 @@
-import { state, registerTotal, observeCards, resetAll, updateProgress } from './core.js?v=ar-qa-8';
-import * as A from './acts1to3.js?v=ar-qa-8';
-import * as B from './acts4to6.js?v=ar-qa-8';
-import * as C from './acts7to9.js?v=ar-qa-8';
-import * as F from './finale.js?v=ar-qa-8';
-import { initI18n, getLanguage } from './i18n.js?v=ar-qa-8';
+import { state, registerTotal, observeCards, resetAll, updateProgress } from './core.js?v=ar-qa-9';
+import * as A from './acts1to3.js?v=ar-qa-9';
+import * as B from './acts4to6.js?v=ar-qa-9';
+import * as C from './acts7to9.js?v=ar-qa-9';
+import * as F from './finale.js?v=ar-qa-9';
+import * as TP from './tone.js?v=ar-qa-9';
+import { initI18n, getLanguage } from './i18n.js?v=ar-qa-9';
 
-const W = { ...A, ...B, ...C, ...F };
+const W = { ...A, ...B, ...C, ...F, ...TP };
 
 initI18n();
 
@@ -62,7 +63,7 @@ const CUES = {
   'a2-builder':[1,18,'b','19–23'],'a2-match':[1,19,'b','20–22'],'a2-lint':[1,24,'a','19–24'],'a2-path':[1,26,'b','27–29'],
   'a3-pattern':[1,45,'b','46–47'],'a3-confidence':[1,45,'b','46–47'],'a3-pushback':[1,49,'a','48–49'],'a3-hunt':[1,50,'a','48–50'],
   'a4-moves':[1,34,'a','34'],'a4-middle':[1,39,'b','40'],'a4-order':[1,43,'a','41–43'],
-  'a5-tells':[1,54,'b','55'],'a5-voices':[1,57,'a','57'],'a5-arabic':[1,61,'b','62'],
+  'a5-tells':[1,54,'b','55'],'a5-tone':[1,56,'a','56'],'a5-voices':[1,57,'a','57'],'a5-arabic':[1,61,'b','62'],
   'a6-funnel':[1,67,'b','68'],'a6-redact':[1,69,'a','69'],'a6-swipe':[1,73,'a','73'],'a6-advice':[1,72,'a','67 & 72'],
   'a7-scorer':[2,11,'a','10–11'],'a7-narrow':[2,15,'b','16–17'],
   'a8-assemble':[2,21,'b','22–25'],'a8-examples':[2,23,'b','24'],'a8-stress':[2,49,'a','45–49'],

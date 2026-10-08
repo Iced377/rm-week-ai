@@ -1311,7 +1311,7 @@ export function translateTree(root) {
   const doc = root.ownerDocument || document;
   const walker = doc.createTreeWalker(root, NodeFilter.SHOW_TEXT);
   const nodes=[]; while (walker.nextNode()) nodes.push(walker.currentNode);
-  nodes.forEach(n => { const next=translate(n.nodeValue); if (next !== n.nodeValue) n.nodeValue=next; });
+  nodes.forEach(n => { if (n.parentElement?.closest('[data-noi18n]')) return; const next=translate(n.nodeValue); if (next !== n.nodeValue) n.nodeValue=next; });
   if (root.nodeType === Node.ELEMENT_NODE) { translateAttributes(root); root.querySelectorAll?.('*').forEach(translateAttributes); }
 }
 export function setLanguage(language) {
@@ -1331,8 +1331,8 @@ export function initI18n() {
   const toggle=document.getElementById('langToggle');
   if(toggle) { toggle.textContent=lang === 'ar' ? 'English' : 'العربية'; toggle.setAttribute('aria-label',lang === 'ar' ? 'التبديل إلى الإنجليزية' : 'التبديل إلى العربية'); toggle.setAttribute('lang',lang === 'ar' ? 'en' : 'ar'); toggle.setAttribute('dir',lang === 'ar' ? 'ltr' : 'rtl'); toggle.onclick=()=>setLanguage(lang === 'ar' ? 'en' : 'ar'); }
   const observer=new MutationObserver(records=>records.forEach(r=>{
-    if(r.type==='characterData') { const next=translate(r.target.nodeValue); if(next!==r.target.nodeValue) r.target.nodeValue=next; }
-    r.addedNodes?.forEach(n=>{ if(n.nodeType===Node.TEXT_NODE){const next=translate(n.nodeValue);if(next!==n.nodeValue)n.nodeValue=next;} else if(n.nodeType===Node.ELEMENT_NODE) translateTree(n); });
+    if(r.target.parentElement?.closest?.('[data-noi18n]')) return; if(r.type==='characterData') { const next=translate(r.target.nodeValue); if(next!==r.target.nodeValue) r.target.nodeValue=next; }
+    r.addedNodes?.forEach(n=>{ if(n.nodeType===Node.TEXT_NODE && n.parentElement?.closest('[data-noi18n]')) return; if(n.nodeType===Node.TEXT_NODE){const next=translate(n.nodeValue);if(next!==n.nodeValue)n.nodeValue=next;} else if(n.nodeType===Node.ELEMENT_NODE) translateTree(n); });
   }));
   observer.observe(document.body,{subtree:true,childList:true,characterData:true});
   const saved=Number(sessionStorage.getItem('rmweek.langScroll')); if(saved>0){sessionStorage.removeItem('rmweek.langScroll'); requestAnimationFrame(()=>window.scrollTo(0,saved));}

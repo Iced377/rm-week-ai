@@ -1,4 +1,4 @@
-import { h, $$, complete, setFb, fb, wrap, state, shuffle } from './core.js?v=ar-qa-8';
+import { h, $$, complete, setFb, fb, wrap, state, shuffle } from './core.js?v=ar-qa-9';
 
 const Q = [
   { q: 'Which addition most often stops the assistant inventing content?', o: ['Naming its role', 'Attaching the material and saying "if it is not there, say so"', 'Asking it to be accurate', 'Asking politely'], a: [1], act: 2, why: 'It only knows what you give it. The boundary line prevents most invented answers.' },
